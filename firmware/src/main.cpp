@@ -1,20 +1,20 @@
 #include <Arduino.h>
 #include <EEPROM.h>
-#include <EasyUltrasonic.h>
 
 #include "configmgr.hpp"
 #include "constants/pins.hpp"
 #include "ledutils.hpp"
 #include "setupmgr.hpp"
 #include "wifimgr.hpp"
+#include "doorstatemgr.hpp"
 
 #define TICK_DELAY 10
 
-EasyUltrasonic ultrasonic;
 LEDUtils LED;
 WifiManager WifiMgr;
 ConfigManager ConfigMgr;
 SetupManager SetupMgr;
+DoorStateManager DoorStateMgr;
 
 void startBackgroundThread();
 void asyncTick(void *parameter);
@@ -31,18 +31,16 @@ void setup() {
     SetupMgr.start();
 
     WifiMgr.connect();
-
-    ultrasonic.attach(Pins::TRIG, Pins::ECHO);
 }
 
 void loop() {
     Serial.println("Loop!");
-    float distCm = ultrasonic.getDistanceCM();
 
-    Serial.print(distCm);
-    Serial.println(" cm");
+    bool doorState = DoorStateMgr.getState();
+    String doorStateString = DoorStateMgr.getStateString();
+    Serial.println(doorStateString);
 
-    if (distCm < 15) {
+    if (doorState) {
         LED.set(0, 255, 0);
     } else {
         LED.set(0, 0, 255);
@@ -60,6 +58,7 @@ void startBackgroundThread() {
 void asyncTick(void *parameter) {
     for (;;) {
         LED.tick();
+        DoorStateMgr.tick();
         delay(TICK_DELAY);
     }
 }
