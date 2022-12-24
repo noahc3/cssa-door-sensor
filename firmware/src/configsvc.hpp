@@ -15,4 +15,4 @@ class ConfigManager {
     void clear();
 };
 
-extern ConfigManager ConfigMgr;
+extern ConfigManager ConfigSvc;

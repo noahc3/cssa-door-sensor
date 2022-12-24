@@ -1,6 +1,6 @@
-#include "wifimgr.hpp"
-#include "configmgr.hpp"
-#include "ledutils.hpp"
+#include "wifisvc.hpp"
+#include "configsvc.hpp"
+#include "ledsvc.hpp"
 #include <Arduino.h>
 #include <HTTPClient.h>
 #include <WiFi.h>
@@ -9,17 +9,17 @@
 #define INTERNET_TEST_TIMEOUT 10000
 #define INTERNET_TEST_URL "https://www.google.com"
 
-WifiManager::WifiManager() {}
+WifiService::WifiService() {}
 
-bool WifiManager::connTestStandard(String ssid, String password) {
+bool WifiService::connTestStandard(String ssid, String password) {
     Serial.println("Performing connection test...");
     return connectStandard(ssid, password);
 }
 
-bool WifiManager::connectStandard(String ssid, String password) {
+bool WifiService::connectStandard(String ssid, String password) {
     int retries = 0;
 
-    LED.set(0, 134, 179, 300);
+    LEDSvc.set(COLOR_CYAN, 300);
 
     Serial.print("Connecting to the wireless network...");
 
@@ -46,12 +46,12 @@ bool WifiManager::connectStandard(String ssid, String password) {
     return internetTest();
 }
 
-bool WifiManager::internetTest() {
+bool WifiService::internetTest() {
     HTTPClient client;
 
     Serial.println("Testing internet connection...");
 
-    LED.set(122, 0, 179, 300);
+    LEDSvc.set(COLOR_PURPLE, 300);
 
     client.setTimeout(INTERNET_TEST_TIMEOUT);
     client.begin(INTERNET_TEST_URL);
@@ -68,8 +68,8 @@ bool WifiManager::internetTest() {
     return success;
 }
 
-bool WifiManager::connect() {
-    ConfigData data = ConfigMgr.load();
+bool WifiService::connect() {
+    ConfigData data = ConfigSvc.load();
     bool res = false;
     if (data.wifimode == 1) {
         res = connectStandard(data.ssid, data.password);
@@ -80,13 +80,13 @@ bool WifiManager::connect() {
     return res;
 }
 
-void WifiManager::saveStandard(String ssid, String password) {
+void WifiService::saveStandard(String ssid, String password) {
     Serial.println("Saving Wifi credentials to flash...");
 
-    ConfigData data = ConfigMgr.load();
+    ConfigData data = ConfigSvc.load();
     data.wifimode = 1;
     strcpy(data.ssid, ssid.c_str());
     strcpy(data.password, password.c_str());
 
-    ConfigMgr.save(data);
+    ConfigSvc.save(data);
 }

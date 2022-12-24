@@ -1,9 +1,9 @@
-#include "configmgr.hpp"
+#include "configsvc.hpp"
 
 #include <Arduino.h>
 #include <EEPROM.h>
 
-#include "ledutils.hpp"
+#include "ledsvc.hpp"
 
 ConfigData ConfigManager::load() {
     ConfigData data;
@@ -16,7 +16,7 @@ ConfigData ConfigManager::load() {
 }
 
 void ConfigManager::save(ConfigData data) {
-    LED.set(132, 255, 0, 100);
+    LEDSvc.set(COLOR_GREEN, 100);
 
     Serial.printf("Size: %d", sizeof(data));
 
@@ -29,7 +29,7 @@ void ConfigManager::save(ConfigData data) {
 void ConfigManager::clear() {
     ConfigData data;
 
-    LED.set(255, 255, 0, 100);
+    LEDSvc.set(COLOR_YELLOW, 100);
 
     data.wifimode = 0;
     strcpy(data.ssid, "");

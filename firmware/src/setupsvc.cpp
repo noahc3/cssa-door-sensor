@@ -1,18 +1,18 @@
-#include "setupmgr.hpp"
-#include "configmgr.hpp"
-#include "ledutils.hpp"
+#include "setupsvc.hpp"
+#include "configsvc.hpp"
+#include "ledsvc.hpp"
 #include "serialutils.cpp"
-#include "wifimgr.hpp"
+#include "wifisvc.hpp"
 #include <Arduino.h>
 
-SetupManager::SetupManager() {}
+SetupService::SetupService() {}
 
-void SetupManager::start() { menu(); }
+void SetupService::start() { menu(); }
 
-void SetupManager::menu() {
+void SetupService::menu() {
     while (true) {
-        LED.set(255, 153, 0);
-        ConfigData data = ConfigMgr.load();
+        LEDSvc.set(COLOR_ORANGE);
+        ConfigData data = ConfigSvc.load();
         Serial.println("Current configuration:");
         Serial.printf("Wifi SSID: %s\n", data.ssid);
         Serial.printf("Webhook: %s\n\n", data.webhook);
@@ -44,7 +44,7 @@ void SetupManager::menu() {
     }
 }
 
-void SetupManager::wifi() {
+void SetupService::wifi() {
     String ssid;
     String userId;
     String password;
@@ -62,9 +62,9 @@ void SetupManager::wifi() {
         Serial.print("Password: ");
         password = SerialUtils::readString();
         Serial.printf("%s/%s\n", ssid, password);
-        result = WifiMgr.connTestStandard(ssid, password);
+        result = WifiSvc.connTestStandard(ssid, password);
         if (result) {
-            WifiMgr.saveStandard(ssid, password);
+            WifiSvc.saveStandard(ssid, password);
         }
         break;
     case 2:
@@ -81,9 +81,9 @@ void SetupManager::wifi() {
     }
 }
 
-void SetupManager::webhook() { Serial.println("Webhook"); }
+void SetupService::webhook() { Serial.println("Webhook"); }
 
-void SetupManager::clear() {
+void SetupService::clear() {
     Serial.println("Clearing configuration");
-    ConfigMgr.clear();
+    ConfigSvc.clear();
 }

@@ -2,7 +2,7 @@
 
 #include <Arduino.h>
 
-class DoorStateManager {
+class DoorStateService {
   private:
     byte querySwitchMode();
     bool querySensorState();
@@ -11,11 +11,11 @@ class DoorStateManager {
     
 
   public:
-    DoorStateManager();
+    DoorStateService();
 
     void tick();
     bool getState();
     String getStateString();
 };
 
-extern DoorStateManager DoorStateMgr;
+extern DoorStateService DoorStateSvc;

@@ -2,13 +2,13 @@
 
 #include <Arduino.h>
 
-class WifiManager {
+class WifiService {
   private:
     bool internetTest();
     bool connectStandard(String, String);
     // bool connectEnterprise(String, String, String);
   public:
-    WifiManager();
+    WifiService();
 
     bool connTestStandard(String, String);
     // bool connTestEnterprise(String, String, String);
@@ -17,4 +17,4 @@ class WifiManager {
     bool connect();
 };
 
-extern WifiManager WifiMgr;
+extern WifiService WifiSvc;

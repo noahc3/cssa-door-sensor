@@ -1,8 +1,8 @@
 #pragma once
 
-#include "WifiMgr.hpp"
+#include "WifiSvc.hpp"
 
-class SetupManager {
+class SetupService {
   private:
     void menu();
     void wifi();
@@ -10,9 +10,9 @@ class SetupManager {
     void clear();
 
   public:
-    SetupManager();
+    SetupService();
 
     void start();
 };
 
-extern SetupManager SetupMgr;
+extern SetupService SetupSvc;

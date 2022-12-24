@@ -1,4 +1,4 @@
-#include "doorstatemgr.hpp"
+#include "doorstatesvc.hpp"
 
 #include <Arduino.h>
 #include <EasyUltrasonic.h>
@@ -27,7 +27,7 @@ byte sensorDataIndex = 0;
 bool sensorState = false;
 
 
-DoorStateManager::DoorStateManager() {
+DoorStateService::DoorStateService() {
     pinMode(Pins::SPDT_A, INPUT);
     pinMode(Pins::SPDT_B, INPUT);
     pinMode(Pins::SPDT_POLE, OUTPUT);
@@ -37,7 +37,7 @@ DoorStateManager::DoorStateManager() {
     ultrasonic.attach(Pins::TRIG, Pins::ECHO);
 }
 
-bool DoorStateManager::getState() {
+bool DoorStateService::getState() {
     if (switchState == AUTO) {
         return sensorState;
     } else {
@@ -45,12 +45,12 @@ bool DoorStateManager::getState() {
     }
 }
 
-void DoorStateManager::tick() {
+void DoorStateService::tick() {
     tickSwitch();
     tickSensor();
 }
 
-void DoorStateManager::tickSwitch() {
+void DoorStateService::tickSwitch() {
     byte state = querySwitchMode();
     switchData[switchDataIndex] = state;
     switchDataIndex = (switchDataIndex + 1) % SWITCH_DEBOUNCE_POINTS;
@@ -77,7 +77,7 @@ void DoorStateManager::tickSwitch() {
     }
 }
 
-void DoorStateManager::tickSensor() {
+void DoorStateService::tickSensor() {
     bool state = querySensorState();
     sensorData[sensorDataIndex] = state;
     sensorDataIndex = (sensorDataIndex + 1) % SENSOR_DEBOUNCE_POINTS;
@@ -99,7 +99,7 @@ void DoorStateManager::tickSensor() {
     }
 }
 
-String DoorStateManager::getStateString() {
+String DoorStateService::getStateString() {
     if (switchState == AUTO) {
         if (sensorState) {
             return "AUTO OPEN";
@@ -115,7 +115,7 @@ String DoorStateManager::getStateString() {
     return "ERROR";
 }
 
-byte DoorStateManager::querySwitchMode() {
+byte DoorStateService::querySwitchMode() {
     byte a = digitalRead(Pins::SPDT_A);
     byte b = digitalRead(Pins::SPDT_B);
 
@@ -128,7 +128,7 @@ byte DoorStateManager::querySwitchMode() {
     }
 }
 
-bool DoorStateManager::querySensorState() {
+bool DoorStateService::querySensorState() {
     float distCm = ultrasonic.getDistanceCM();
     return distCm < SENSOR_MAX_DISTANCE;
 }
