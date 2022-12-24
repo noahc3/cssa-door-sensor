@@ -28,3 +28,5 @@ Notes:
 - Do not connect any hardware to pins used by the flash controller or UART interface.
 
 ![](https://github.com/noahc3/cssa-door-sensor/raw/master/resources/pinout.png)
+
+![](https://github.com/noahc3/cssa-door-sensor/raw/master/resources/breadboard.jpg)
