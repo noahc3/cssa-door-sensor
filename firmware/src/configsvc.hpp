@@ -13,6 +13,8 @@ class ConfigManager {
     ConfigData load();
     void save(ConfigData);
     void clear();
+    String getWebhookUrl();
+    void saveWebhookUrl(String);
 };
 
 extern ConfigManager ConfigSvc;

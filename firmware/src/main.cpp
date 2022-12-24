@@ -7,6 +7,7 @@
 #include "setupsvc.hpp"
 #include "wifisvc.hpp"
 #include "doorstatesvc.hpp"
+#include "webhooksvc.hpp"
 
 #define TICK_DELAY 10
 
@@ -15,7 +16,9 @@ WifiService WifiSvc;
 ConfigManager ConfigSvc;
 SetupService SetupSvc;
 DoorStateService DoorStateSvc;
+WebhookService WebhookSvc;
 
+bool getDoorState();
 void startBackgroundThread();
 void asyncTick(void *parameter);
 
@@ -31,14 +34,18 @@ void setup() {
     SetupSvc.start();
 
     WifiSvc.connect();
+
+    Serial.println("Waiting 10s for initial data collection...");
+    delay(10000);
+    
+    Serial.println("Performing webhook init...");
+    WebhookSvc.init(getDoorState());
 }
 
 void loop() {
     Serial.printf("Loop - %.2fs\n", (millis() / 1000.0));
 
-    bool doorState = DoorStateSvc.getState();
-    String doorStateString = DoorStateSvc.getStateString();
-    Serial.println(doorStateString);
+    bool doorState = getDoorState();
 
     if (doorState) {
         LEDSvc.set(COLOR_GREEN);
@@ -46,7 +53,17 @@ void loop() {
         LEDSvc.set(COLOR_BLUE);
     }
 
+    WebhookSvc.trySendMessage(doorState);
+
     delay(1000);
+}
+
+bool getDoorState() {
+    bool doorState = DoorStateSvc.getState();
+    String doorStateString = DoorStateSvc.getStateString();
+    Serial.println(doorStateString);
+
+    return doorState;
 }
 
 void startBackgroundThread() {

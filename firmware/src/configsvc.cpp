@@ -38,3 +38,14 @@ void ConfigManager::clear() {
     strcpy(data.webhook, "");
     save(data);
 }
+
+String ConfigManager::getWebhookUrl() {
+    ConfigData data = load();
+    return String(data.webhook);
+}
+
+void ConfigManager::saveWebhookUrl(String url) {
+    ConfigData data = load();
+    strcpy(data.webhook, url.c_str());
+    save(data);
+}

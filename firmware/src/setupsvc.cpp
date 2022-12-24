@@ -81,7 +81,11 @@ void SetupService::wifi() {
     }
 }
 
-void SetupService::webhook() { Serial.println("Webhook"); }
+void SetupService::webhook() { 
+    Serial.print("Webhook: ");
+    String webhook = SerialUtils::readString();
+    ConfigSvc.saveWebhookUrl(webhook);
+}
 
 void SetupService::clear() {
     Serial.println("Clearing configuration");
