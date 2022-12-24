@@ -12,12 +12,11 @@ The firmware for the ESP32 chip is written in C++ managed by the PlatformIO VSCo
 
 ### Components
 
-This project uses a NodeMCU-32S clone sold by KeeYees [(amazon link)](https://www.amazon.ca/dp/B07QCP2451) with the following additional hardware
+This project uses a NodeMCU-32S clone sold by KeeYees [(Amazon link)](https://www.amazon.ca/dp/B07QCP2451) with the following additional hardware:
 
 - 1x HC-SR04 Ultra Sonic Distance Sensor
-- 1x RGB LED
-- 1x SPDT On-Off-On toggle switch *(not yet implemented)*
-- 2x momentary push buttons *(not yet implemented)*
+- 1x 5mm RGB Common Cathode LED
+- 1x SPDT On-Off-On toggle switch
 
 ### Pinout
 
@@ -25,6 +24,7 @@ Pinout configuration can be modified in the `constants/pins.hpp` file. Below ill
 
 Notes:
 - The KeeYees board has the same pinout as the 38pin ESP32 Wroom DevKit reference PCB.
+- The pinout choices are designed to support a 400-point compact breadboard.
 - Do not connect any hardware to pins used by the flash controller or UART interface.
 
-![](https://i.imgur.com/HRISoJM.png)
+![](https://github.com/noahc3/cssa-door-sensor/raw/master/resources/pinout.png)
