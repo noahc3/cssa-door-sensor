@@ -20,11 +20,11 @@ void startBackgroundThread();
 void asyncTick(void *parameter);
 
 void setup() {
-    LED.setBrightness(0.3);
-    LED.set(255, 0, 0);
-
     Serial.begin(115200);
     Serial.println("Initializing!");
+
+    LED.setBrightness(0.3);
+    LED.set(255, 0, 0);
 
     startBackgroundThread();
 
@@ -34,7 +34,7 @@ void setup() {
 }
 
 void loop() {
-    Serial.println("Loop!");
+    Serial.printf("Loop - %.2fs\n", (millis() / 1000.0));
 
     bool doorState = DoorStateMgr.getState();
     String doorStateString = DoorStateMgr.getStateString();
