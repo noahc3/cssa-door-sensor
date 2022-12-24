@@ -16,7 +16,7 @@ ConfigData ConfigManager::load() {
 }
 
 void ConfigManager::save(ConfigData data) {
-    LEDSvc.set(COLOR_GREEN, 100);
+    LEDSvc.set(COLOR_YELLOW, 100);
 
     Serial.printf("Size: %d", sizeof(data));
 
