@@ -15,6 +15,9 @@ void SetupService::menu() {
         ConfigData data = ConfigSvc.load();
         Serial.println("Current configuration:");
         Serial.printf("Wifi SSID: %s\n", data.ssid);
+        if (data.wifimode == 2) {
+            Serial.printf("Wifi user: %s\n", data.userid);
+        }
         Serial.printf("Webhook: %s\n\n", data.webhook);
 
         Serial.println("Select option:");
@@ -23,7 +26,7 @@ void SetupService::menu() {
         Serial.println("3. Clear configuration");
         Serial.println("0. Resume boot");
 
-        int option = SerialUtils::readInt();
+        int option = SerialUtils::readInt(10000);
 
         switch (option) {
         case 1:
@@ -35,7 +38,8 @@ void SetupService::menu() {
         case 3:
             clear();
             break;
-        case 0:
+        case 0: 
+        case -1:
             return;
         default:
             Serial.println("Invalid option");
@@ -60,7 +64,7 @@ void SetupService::wifi() {
         Serial.print("SSID: ");
         ssid = SerialUtils::readString();
         Serial.print("Password: ");
-        password = SerialUtils::readString();
+        password = SerialUtils::readString(true);
         Serial.printf("%s/%s\n", ssid, password);
         result = WifiSvc.connTestStandard(ssid, password);
         if (result) {
@@ -73,7 +77,11 @@ void SetupService::wifi() {
         Serial.print("User ID: ");
         userId = SerialUtils::readString();
         Serial.print("Password: ");
-        password = SerialUtils::readString();
+        password = SerialUtils::readString(true);
+        result = WifiSvc.connTestEnterprise(ssid, userId, password);
+        if (result) {
+            WifiSvc.saveEnterprise(ssid, userId, password);
+        }
         break;
     default:
         Serial.println("Invalid option");
